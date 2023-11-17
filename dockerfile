@@ -1,17 +1,22 @@
-# Use an official Python runtime as the base image
-FROM python:3.7-slim
+# Use python:3.7 instead of slim version 
+FROM python:3.7
 
-# Set the working directory in the container
-WORKDIR /app
+# Set higher thread limits
+ENV GUNICORN_CMD_ARGS "--threads=4"
+ENV PYTHONUNBUFFERED=1
 
-# Copy the requirements file to the container 
+# Set working directory
+WORKDIR /app 
+
+# Copy requirements file
 COPY requirements.txt .
 
-# Install dependencies
-RUN pip install -r requirements.txt
+# Install requirements one-by-one
+RUN pip install pytest
+# etc for each package
 
-# Copy the main.py script to the container
+# Copy app
 COPY sparse_recommender.py .
 
-# Define the command to run when starting the container
-CMD ["python", "sparse_recommender.py"]
+# Run app
+CMD [ "python", "sparse_recommender.py" ]
