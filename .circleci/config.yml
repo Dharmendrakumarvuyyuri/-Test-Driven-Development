@@ -1,0 +1,36 @@
+version: 2.1
+
+orbs:
+  python: circleci/python@2.0.3
+
+jobs:
+  build_and_test:
+    executor: python/default
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 19.03.13
+      - run:
+          name: install requirements
+          command: pip install -r requirements.txt
+      - run:
+          name: Run tests for Backend
+          command: python -m pytest
+      - run:
+          name: build docker image
+          command: docker build -t $DOCKERHUB_USERNAME/TESTDRIVENDEVELOPMENT:latest .
+      - run:
+          name: login to docker
+          command: docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASSWORD
+      - run:
+          name: push to docker
+          command: docker push $DOCKERHUB_USERNAME/TESTDRIVENDEVELOPMENT:latest 
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - .
+workflows:
+  build_and_deploy:
+    jobs:
+      - build_and_test
+    
