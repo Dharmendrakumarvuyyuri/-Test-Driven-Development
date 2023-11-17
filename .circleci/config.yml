@@ -18,13 +18,13 @@ jobs:
           command: python -m pytest
       - run:
           name: build docker image
-          command: docker build -t $DOCKERHUB_USERNAME/testdrivendevelopment:latest .
+          command: docker build -t $DOCKERHUB_USERNAME/ttd-assignment:latest .
       - run:
           name: login to docker
           command: docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASSWORD
       - run:
           name: push to docker
-          command: docker push $DOCKERHUB_USERNAME/testdrivendevelopment:latest 
+          command: docker push $DOCKERHUB_USERNAME/ttd-assignment:latest 
       - persist_to_workspace:
           root: ~/project
           paths:
